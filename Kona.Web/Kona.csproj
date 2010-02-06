@@ -59,6 +59,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Lucene.Net, Version=2.3.1.3, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Lucene.Net.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\NHibernate.dll</HintPath>
@@ -74,6 +78,10 @@
     <Reference Include="NHibernate.Linq, Version=1.0.0.4000, Culture=neutral, PublicKeyToken=444cf6a87fdab271, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\NHibernate.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Search, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\NHibernate.Search.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap, Version=2.5.2.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -115,10 +123,16 @@
     <Compile Include="Infrastructure\Bootstrapper.cs" />
     <Compile Include="Infrastructure\InventoryStateType.cs" />
     <Compile Include="Infrastructure\KonaControllerFactory.cs" />
+    <Compile Include="Infrastructure\KonaDialect.cs" />
     <Compile Include="Infrastructure\KonaViewEngine.cs" />
+    <Compile Include="Infrastructure\TransactionActionFilter.cs" />
+    <Compile Include="Model\Customer.cs" />
+    <Compile Include="Model\Stats\CustomerEvent.cs" />
     <Compile Include="Model\Supply\Inventory\InStock.cs" />
     <Compile Include="Model\Supply\Inventory\InventoryState.cs" />
     <Compile Include="Model\Supply\Inventory\BackOrdered.cs" />
+    <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="Services\ICustomerService.cs" />
     <Compile Include="Services\StoreService.cs" />
     <Compile Include="ViewModels\DetailsViewModel.cs" />
     <Compile Include="ViewModels\ProductListViewModel.cs" />
@@ -398,12 +412,17 @@
     <EmbeddedResource Include="Model\Supply\Category.hbm.xml" />
     <EmbeddedResource Include="Model\Order\OrderItem.hbm.xml" />
     <EmbeddedResource Include="Model\Order\Order.hbm.xml" />
+    <EmbeddedResource Include="Model\Stats\CustomerEvent.hbm.xml" />
+    <EmbeddedResource Include="Model\Customer.hbm.xml" />
+    <EmbeddedResource Include="Model\Queries.hbm.xml" />
     <Content Include="nhibernate.config" />
+    <Content Include="Views\Product\Search.aspx" />
     <EmbeddedResource Include="Model\Supply\Product.hbm.xml" />
     <None Include="nhibernate-configuration.xsd" />
     <None Include="nhibernate-mapping.xsd" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="index\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

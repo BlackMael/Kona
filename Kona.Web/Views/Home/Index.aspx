@@ -109,7 +109,13 @@
 
 
         <div class="sidebarWidget"><h5>Search Widget</h5>
-        <div class="sidebarContent"><form><input type="text" /><br /><input type="submit" value="Search" /></form></div></div>
+        <div class="sidebarContent">
+            <form action="<%=Url.Action("search","product") %>" method="get">
+                <input type="text" name="q" /><br />
+                <input type="submit" value="Search" />
+            </form>
+        </div>
+        </div>
 
 
     <!--End sidebar-->

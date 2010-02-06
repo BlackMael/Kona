@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Iesi.Collections.Generic;
 using Kona.Model.Supply.Inventory;
+using NHibernate.Search.Attributes;
 
 namespace Kona.Model {
     
@@ -15,9 +16,11 @@ namespace Kona.Model {
         Download = 2
     }
 
-    
+    [Indexed]
     public class Product {
+        [DocumentId]
         public virtual string SKU { get; set; }
+        [Field]
         public virtual string Name { get; set; }
         public virtual decimal Price { get; set; }
         public virtual decimal DiscountPercent { get; set; }
@@ -37,10 +40,15 @@ namespace Kona.Model {
             get { return Price * (1.0M - DiscountPercent); } 
         }
 
+        //attributes and how they map
+        //physical index structure
+        //related entities in index
+        //building index for first time
 
+
+        [NHibernate.Search.Attributes.IndexedEmbedded]
         public virtual ICollection<Descriptor> Descriptors { get; set; }
         public virtual ICollection<Image> Images { get; set; }
-       
         public virtual ISet<Category> Categories { get; set; }
         
         #region Object overrides

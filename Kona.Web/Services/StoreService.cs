@@ -8,20 +8,33 @@ using NHibernate.Linq;
 using NHibernate.Criterion;
 using NHibernate.LambdaExtensions;
 using NHibernate.Transform;
+using Kona.Services;
 
 namespace Kona.App.Services {
     public interface IStoreService{
         ProductListViewModel GetHomeModel();
         DetailsViewModel GetDetails(string sku);
+        ProductListViewModel Search(string query);
     }
 
     public class StoreService : IStoreService{
 
         ISession _session;
-        public StoreService(ISession session) {
+        ICustomerService _customerService;
+        public StoreService(ISession session, 
+            ICustomerService customerService) {
             _session = session;
+            _customerService = customerService;
         }
-        
+
+        public ProductListViewModel Search(string query) {
+            var model = new ProductListViewModel();
+            model.FeaturedProducts = NHibernate.Search.Search.CreateFullTextSession(_session)
+                .CreateFullTextQuery<Product>("Name:Boots").List<Product>();
+            return model;          
+
+        }
+
 //        IStoreRepository _repo;
 //        public StoreService(IStoreRepository repo){
 //            _repo = repo;
@@ -48,7 +61,7 @@ namespace Kona.App.Services {
         public ProductListViewModel GetHomeModel() {
 
             var result = new ProductListViewModel();
-
+            
             //categories
             result.Categories = _session
                 .CreateCriteria<Category>()
@@ -76,7 +89,8 @@ namespace Kona.App.Services {
         public DetailsViewModel GetDetails(string sku)
         {
             var result = new DetailsViewModel();
-            
+            var customer = _customerService.GetCurrentCustomer();
+
             //categories
             result.Categories = _session
                 .CreateCriteria<Category>()
@@ -86,6 +100,7 @@ namespace Kona.App.Services {
             //selected product
             result.SelectedProduct = _session.Get<Product>(sku);
             
+            //get all the orders 
             var orderIDsContainingCurrentSku=DetachedCriteria.For<OrderItem>()
                         .Add<OrderItem>(x=>x.Product.SKU==sku)
                         .SetProjection(Projections.Property("Order.id"));
@@ -103,6 +118,14 @@ namespace Kona.App.Services {
                 .Add(Subqueries.PropertyIn("id", skusOfProductsAppearingInOrdersContainingCurrentSku))
                 .SetResultTransformer(Transformers.DistinctRootEntity)
                 .List<Product>();
+
+
+            //add favorites and recents
+            result.Recent = _session.GetNamedQuery("RecentProductsByCustomer")
+                .SetGuid("ID", customer.CustomerID).List<Product>();
+
+            result.Favorite = _session.GetNamedQuery("FavoriteCategoriesByCustomer")
+                .SetGuid("ID", customer.CustomerID).List<Category>();
 
 
             return result;

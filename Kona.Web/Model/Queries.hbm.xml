@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+				   assembly="Kona"
+				   namespace="Kona.Model">
+
+    <sql-query name="RecentProductsByCustomer">
+        <return class="Product" alias="Product"></return>
+        <query-param name="ID" type="System.Guid"/>
+        select {Product.*} from products as Product where sku in
+        (SELECT TOP 5 SKU
+        FROM CustomerEvents
+        WHERE CustomerID=:ID
+        GROUP BY SKU
+        ORDER BY MAX(EventDate) DESC)
+    </sql-query>
+    <sql-query name="FavoriteCategoriesByCustomer">
+        <return class="Category" alias="Category"></return>
+        <query-param name="ID" type="System.Guid"/>
+        select {Category.*} from categories as Category where CategoryID in
+        (SELECT TOP 5 CategoryID
+        FROM CustomerEvents
+        WHERE CategoryID IS NOT NULL AND CustomerID=:ID
+        GROUP BY CategoryID
+        ORDER BY COUNT(EventID) DESC)
+    </sql-query>
+</hibernate-mapping>

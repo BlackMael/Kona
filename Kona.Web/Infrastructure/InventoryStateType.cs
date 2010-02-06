@@ -16,7 +16,7 @@ namespace Kona.Infrastructure {
         Discontinued = 5,
         CurrentlyUnavailable = 6
     }
-    
+    [Serializable]
     public class InventoryStateType:IUserType {
 
 

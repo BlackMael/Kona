@@ -7,6 +7,8 @@ using System.Web.Mvc.Ajax;
 using Kona.App.Services;
 using Kona.Model;
 using Kona.ViewModels;
+using Kona.Services;
+using Kona.Infrastructure;
 
 namespace Kona.Controllers
 {
@@ -14,15 +16,16 @@ namespace Kona.Controllers
     {
 
         IStoreService _service;
-
-        public ProductController(IStoreService service)
+        ICustomerService _customerService;
+        public ProductController(IStoreService service,ICustomerService customerService)
         {
             _service = service;
+            _customerService = customerService;
         }
 
-        public ActionResult Search(string query)
+        public ActionResult Search(string q)
         {
-            return Content("hook me up");
+            return View(_service.Search(q));
         }
         //
         // GET: /Product/
@@ -42,11 +45,14 @@ namespace Kona.Controllers
 
         //
         // GET: /Product/Details/5
-
+        [TransactionFilter]
         public ActionResult Details(string id)
         {
 
             var model = _service.GetDetails(id);
+            
+            //track an event
+            _customerService.TrackProductView(model.SelectedProduct);
             return View(model);
         }
 

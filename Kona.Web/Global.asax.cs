@@ -8,6 +8,8 @@ using NHibernate;
 using NHibernate.Cfg;
 using System.IO;
 using NHibernate.Context;
+using NHibernate.Search;
+using Kona.Model;
 
 
 namespace Kona
@@ -49,7 +51,9 @@ namespace Kona
             var cfg = new Configuration().Configure(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nhibernate.config"));
             cfg.SetProperty(NHibernate.Cfg.Environment.ConnectionStringName, System.Environment.MachineName);
             NHibernateProfiler.Initialize();
+
             return cfg.BuildSessionFactory();
+
         }
 
 
@@ -58,6 +62,18 @@ namespace Kona
             RegisterRoutes(RouteTable.Routes);
             Bootstrapper.ConfigureStructureMap();
             ControllerBuilder.Current.SetControllerFactory(new KonaControllerFactory());
+
+            //using (var s=SessionFactory.OpenSession()) {
+            //    s.BeginTransaction();
+            //    var fts=Search.CreateFullTextSession(s);
+            //    fts.PurgeAll(typeof(Product));
+            //    var products=fts.CreateCriteria<Product>().List<Product>();
+                
+            //    foreach (var item in products) {
+            //        fts.Index(item);    
+            //    }
+            //    s.Transaction.Commit();
+            //}
         }
     }
 }

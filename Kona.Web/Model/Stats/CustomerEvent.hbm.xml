@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+				   assembly="Kona"
+				   namespace="Kona.Model">
+	
+	<class name="CustomerEvent"
+		   table="CustomerEvents" >
+		<id column="EventID" type="System.Int32">
+			<generator class="identity"/>
+		</id>
+        <property name="IP" not-null="true" />
+        <property name="EventDate" not-null="true" />
+        <property name="Behavior" column="UserBehaviorID" />
+        
+        <many-to-one name="Category" column="CategoryID" ></many-to-one>
+        <many-to-one name="Customer" column="CustomerID" ></many-to-one>
+        <many-to-one name="Order" column="OrderID" ></many-to-one>
+        <many-to-one name="Product" column="SKU" ></many-to-one>
+        
+    </class>
+</hibernate-mapping>

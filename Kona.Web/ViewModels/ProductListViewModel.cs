@@ -16,7 +16,7 @@ namespace Kona.ViewModels {
         public IList<Product> FeaturedProducts { get; set; }
         public Product FeaturedProduct { get; set; }
         public IList<Product> Recent { get; set; }
-        public IList<Product> Favorite { get; set; }
+        public IList<Category> Favorite { get; set; }
         public Category SelectedCategory { get; set; }
         public Category HomeCategory {
             get {
